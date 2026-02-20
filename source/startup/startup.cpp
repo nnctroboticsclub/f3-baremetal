@@ -15,8 +15,8 @@ extern "C" int main();
 extern "C" void __libc_init_array();
 extern "C" void Reset_Handler();
 
-extern "C" __attribute__((weak))
-uint32_t SystemCoreClock;  // for HAL compatibility
+extern "C"
+    __attribute__((weak)) uint32_t SystemCoreClock;  // for HAL compatibility
 uint32_t SystemCoreClock;
 
 namespace stm32 {
@@ -53,7 +53,7 @@ void ClearBootloaderFlag() {
   }
 }
 
-[[noreturn]] static void StartApp() {
+static void StartApp() {
   // Copy the .data section to SRAM
   uint32_t const* pSrc = &_sidata;
   for (uint32_t* pDest = &_sdata; pDest < &_edata;) {
@@ -89,7 +89,7 @@ struct BL_VecT {
   void (*reset_handler)();
 };
 
-[[noreturn]] inline static void StartBootloader() {
+inline static void StartBootloader() {
   constexpr uint32_t kSystemMemory = 0x1FFFd800;
 
   auto* vec = reinterpret_cast<BL_VecT*>(kSystemMemory);
@@ -107,5 +107,8 @@ extern "C" [[noreturn]] void StartUp() {
   } else {
     StartApp();
   }
+
+  while (true)
+    ;
 }
 }  // namespace stm32::startup

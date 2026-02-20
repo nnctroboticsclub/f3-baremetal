@@ -3,6 +3,8 @@ add_subdirectory(polyfills)
 # *******************
 # F3-HAL Library
 # *******************
+find_package(CMSIS5DeviceF3 REQUIRED)
+
 if(${EMULATION_ENABLED})
     add_library(f3-hal OBJECT startup/dummy.c)
 else()
@@ -10,14 +12,14 @@ else()
 endif()
 
 target_include_directories(f3-hal PUBLIC include)
-target_link_libraries(f3-hal PUBLIC stm32cube-cmsis syoch-robotics-common)
+target_link_libraries(f3-hal PUBLIC CMSIS5::Device::F3 syoch-robotics-common)
 
 
 # *******************
 # F3-Baremetal Library
 # *******************
 add_library(f3-baremetal-libs STATIC source/ram_vector.cpp)
-target_link_libraries(f3-baremetal-libs PUBLIC f3-hal stm32cube)
+target_link_libraries(f3-baremetal-libs PUBLIC f3-hal STM32HALF303x8)
 
 if(${EMULATION_ENABLED})
     target_compile_definitions(f3-baremetal-libs PRIVATE

@@ -1,10 +1,10 @@
 #pragma once
 
-#include <stdint.h>
-#include <concepts>
-#include <utility>
-
 #include <stm32f3xx.h>
+
+#include <concepts>
+#include <cstdint>
+#include <utility>
 
 namespace stm32f3::rcc {
 //* Clock Origin
@@ -23,8 +23,8 @@ struct ClockSource {
 //* PLL Source Config
 template <typename T>
 concept PLLSourceConfig = requires {
-  { T::ApplyConfig() } -> std::same_as<void>;
-  { T::Frequency(std::declval<ClockOrigin>()) } -> std::same_as<uint32_t>;
+  {T::ApplyConfig()}->std::same_as<void>;
+  {T::Frequency(std::declval<ClockOrigin>())}->std::same_as<uint32_t>;
 };
 
 template <int kPrediv>
@@ -77,8 +77,8 @@ static constexpr bool PLLConfigLike_v<PLLConfig<Source, kMul>> = true;
 
 template <typename T>
 concept PLLConfigLike = requires {
-  { T::ApplyConfig() } -> std::same_as<void>;
-  { T::Frequency(std::declval<ClockOrigin>()) } -> std::same_as<uint32_t>;
+  {T::ApplyConfig()}->std::same_as<void>;
+  {T::Frequency(std::declval<ClockOrigin>())}->std::same_as<uint32_t>;
 }
 &&PLLConfigLike_v<T>;
 
@@ -124,7 +124,7 @@ static constexpr bool SystemClockConfig_v<SystemClockConfig<Source>> = true;
 
 template <typename T>
 concept SystemClockConfigLike = requires {
-  { T::ApplyConfig() } -> std::same_as<void>;
+  {T::ApplyConfig()}->std::same_as<void>;
 }
 &&SystemClockConfig_v<T>;
 
@@ -194,10 +194,10 @@ static constexpr bool BusClockConfig_v<BusClockConfig<AHB, APB1, APB2>> = true;
 
 template <typename T>
 concept BusClockConfigLike = requires {
-  { T::ApplyConfig() } -> std::same_as<void>;
-  { T::AHB_Ratio() } -> std::same_as<float>;
-  { T::APB1_Ratio() } -> std::same_as<float>;
-  { T::APB2_Ratio() } -> std::same_as<float>;
+  {T::ApplyConfig()}->std::same_as<void>;
+  {T::AHB_Ratio()}->std::same_as<float>;
+  {T::APB1_Ratio()}->std::same_as<float>;
+  {T::APB2_Ratio()}->std::same_as<float>;
 }
 &&BusClockConfig_v<T>;
 
@@ -239,12 +239,12 @@ struct RCCConfig {
 
 template <typename T>
 concept RCCConfigLike = requires {
-  { T::ApplyConfig() } -> std::same_as<void>;
-  { T::GetClockSource() } -> std::same_as<ClockSource>;
-  { T::GetSystemClock() } -> std::same_as<uint32_t>;
-  { T::GetAHBClock() } -> std::same_as<uint32_t>;
-  { T::GetAPB1Clock() } -> std::same_as<uint32_t>;
-  { T::GetAPB2Clock() } -> std::same_as<uint32_t>;
+  {T::ApplyConfig()}->std::same_as<void>;
+  {T::GetClockSource()}->std::same_as<ClockSource>;
+  {T::GetSystemClock()}->std::same_as<uint32_t>;
+  {T::GetAHBClock()}->std::same_as<uint32_t>;
+  {T::GetAPB1Clock()}->std::same_as<uint32_t>;
+  {T::GetAPB2Clock()}->std::same_as<uint32_t>;
 };
 
 using DefaultConfig =

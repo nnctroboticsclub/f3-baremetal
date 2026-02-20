@@ -1,14 +1,15 @@
 #pragma once
 
-#include <stdint.h>
-#include <stdio.h>
-#include <array>
-#include <utility>
-#include "f3/peripherals/rcc.hpp"
-#include "logger/logger.hpp"
-#include "stm32f303x8.h"
+#include <stm32f303x8.h>
 
+#include <array>
+#include <cstdint>
+#include <cstdio>
+#include <utility>
+
+#include <f3/peripherals/rcc.hpp>
 #include <f3/ram_vector.hpp>
+#include <logger/logger.hpp>
 
 namespace stm32f3::can {
 struct CANTiming {
@@ -226,14 +227,14 @@ class Mailbox {
 
 template <typename T>
 concept CANHandler = requires {
-  { T::HandleRx(0, std::declval<CANMessage>()) } -> std::same_as<void>;
-  { T::HandleRx(1, std::declval<CANMessage>()) } -> std::same_as<void>;
-  { T::HandleError() } -> std::same_as<void>;
+  {T::HandleRx(0, std::declval<CANMessage>())}->std::same_as<void>;
+  {T::HandleRx(1, std::declval<CANMessage>())}->std::same_as<void>;
+  {T::HandleError()}->std::same_as<void>;
 };
 
 template <CANHandler Handler>
 class BaremetalCAN {
-  static inline robotics::logger::Logger can_logger{"CAN", "can"};
+  static inline robotics::logger::Logger can_logger{"CAN", "CAN"};
 
   static inline void Reset() {
     CAN->MCR |= CAN_MCR_RESET;

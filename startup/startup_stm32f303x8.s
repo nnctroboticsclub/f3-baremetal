@@ -10,7 +10,7 @@
 	.weak	Reset_Handler
 	.type	Reset_Handler, %function
 Reset_Handler:
-  ldr   sp, =_estack    /* Atollic update: set stack pointer */
+  ldr   sp, =_estack
 	bl StartUp
 
 .size	Reset_Handler, .-Reset_Handler

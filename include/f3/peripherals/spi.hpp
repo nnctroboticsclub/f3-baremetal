@@ -5,8 +5,8 @@
 #include <cstdio>
 #include <functional>
 #include <optional>
+#include "Nano/no_mutex_lifo.hpp"
 #include "f3/ram_vector.hpp"
-#include "robotics/utils/no_mutex_lifo.hpp"
 #include "stm32f303x8.h"
 #include "stm32f3xx_hal_rcc_ex.h"
 #include "stm32f3xx_hal_spi.h"
@@ -18,8 +18,8 @@ enum class SPIMode {
 };
 
 struct Transfer {
-  uint8_t tx_buffer[8];
-  uint8_t rx_buffer[8];
+  uint8_t* tx_buffer;
+  uint8_t* rx_buffer;
   size_t size;
 
   std::function<void(Transfer&)> callback = [](auto) {
@@ -27,10 +27,10 @@ struct Transfer {
   };
 };
 
-robotics::utils::NoMutexLIFO<Transfer, 4> transfer_queue = {};
+Nano::collection::NoMutexLIFO<Transfer, 4> transfer_queue = {};
 std::optional<Transfer> ongoing_transfer = std::nullopt;
 
-extern "C" void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi) {
+extern "C" void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef* hspi) {
   // printf("[C]\n");
   auto trans = *ongoing_transfer;
   ongoing_transfer = std::nullopt;
@@ -45,9 +45,8 @@ extern "C" void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi) {
 
   // printf("[C-NE]\n");
   ongoing_transfer = transfer_queue.Pop();
-  auto ret = HAL_SPI_TransmitReceive_IT(hspi, ongoing_transfer->tx_buffer,
-                                        ongoing_transfer->rx_buffer,
-                                        ongoing_transfer->size);
+  auto ret = HAL_SPI_Transmit_IT(hspi, ongoing_transfer->tx_buffer,
+                                 ongoing_transfer->size);
   if (ret != HAL_OK) {
     // printf("[C-Err]\n");
     ongoing_transfer = std::nullopt;
@@ -60,9 +59,11 @@ template <SPI_HandleTypeDef* hspi>
 class ITProcessor {
   static auto DoTransfer(Transfer const& trans) {
     ongoing_transfer = trans;
-    auto ret = HAL_SPI_TransmitReceive_IT(hspi, ongoing_transfer->tx_buffer,
-                                          ongoing_transfer->rx_buffer,
-                                          ongoing_transfer->size);
+
+    // printf("{DT %p -> %p}\n", trans.tx_buffer, trans.rx_buffer);
+    auto ret = HAL_SPI_Transmit_IT(hspi, ongoing_transfer->tx_buffer,
+                                   ongoing_transfer->size);
+    // printf("{DT-D ==> %d}\n", ret);
     if (ret != HAL_OK) {
       return -1;
     }
@@ -74,6 +75,7 @@ class ITProcessor {
   ITProcessor() = default;
 
   void Init() {
+    // printf("[I]\n");
     stm32f3::ram_vector::ram_vector[SPI1_IRQn + 16] = []() {
       HAL_SPI_IRQHandler(hspi);
     };
@@ -86,6 +88,7 @@ class ITProcessor {
       return DoTransfer(trans);
     }
 
+    // printf("{RTF}\n");
     if (transfer_queue.Full()) {
       return -1;
     }
@@ -94,11 +97,11 @@ class ITProcessor {
     transfer_queue.Push(trans);
     return 0;
   }
-  static int RequestTransfer(uint8_t* tx_buffer, uint8_t* rx_buffer,
+  static int RequestTransfer(uint8_t const* tx_buffer, uint8_t* rx_buffer,
                              size_t size) {
     struct Transfer transfer;
-    std::copy(tx_buffer, tx_buffer + size, transfer.tx_buffer);
-    std::copy(rx_buffer, rx_buffer + size, transfer.rx_buffer);
+    transfer.tx_buffer = const_cast<uint8_t*>(tx_buffer);
+    transfer.rx_buffer = rx_buffer;
     transfer.size = size;
 
     return RequestTransfer(transfer);
@@ -120,7 +123,7 @@ class SPIBus {
 
     hspi.Instance = SPI1;
     hspi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
-    hspi.Init.Direction = SPI_DIRECTION_2LINES;
+    hspi.Init.Direction = SPI_DIRECTION_1LINE;
     hspi.Init.CLKPhase = SPI_PHASE_1EDGE;
     hspi.Init.CLKPolarity = SPI_POLARITY_LOW;
     hspi.Init.DataSize = SPI_DATASIZE_8BIT;
@@ -141,7 +144,7 @@ class SPIBus {
     return 0;
   }
 
-  static int RequestTransfer(uint8_t* tx_buffer, uint8_t* rx_buffer,
+  static int RequestTransfer(uint8_t const* tx_buffer, uint8_t* rx_buffer,
                              size_t size) {
     return it.RequestTransfer(tx_buffer, rx_buffer, size);
   }
