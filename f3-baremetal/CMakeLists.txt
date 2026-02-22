@@ -5,6 +5,7 @@ add_library(f3-baremetal STATIC
     source/startup.cpp
     source/startup_stm32f303x8.s
 )
+add_library(F3Baremetal::f3-baremetal ALIAS f3-baremetal)
 target_compile_definitions(f3-baremetal PUBLIC
     STM32F303x8
 )
@@ -21,7 +22,7 @@ install(TARGETS f3-baremetal
     INCLUDES DESTINATION include
 )
 
-install(DIRECTORY include
+install(DIRECTORY include/
     DESTINATION include/f3-baremetal
     FILES_MATCHING
         PATTERN "*.h"
