@@ -5,7 +5,6 @@
 #include <f3/ram_vector.hpp>
 #include "rcc.hpp"
 #include "stm32f303x8.h"
-#include "stm32f3xx_hal_cortex.h"
 
 namespace stm32f3::basic_timer {
 struct BasicTimerConfiguration {
@@ -66,7 +65,7 @@ consteval BasicTimerConfiguration FindBasicTimerConfig(uint32_t period_us,
 
 template <typename T>
 concept TimerHandler = requires {
-  { T::OnTick() } -> std::same_as<void>;
+  {T::OnTick()}->std::same_as<void>;
 };
 
 template <int peripheral_id>

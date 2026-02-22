@@ -9,7 +9,6 @@
 
 #include <f3/peripherals/rcc.hpp>
 #include <f3/ram_vector.hpp>
-#include <logger/logger.hpp>
 
 namespace stm32f3::can {
 struct CANTiming {
@@ -234,8 +233,6 @@ concept CANHandler = requires {
 
 template <CANHandler Handler>
 class BaremetalCAN {
-  static inline robotics::logger::Logger can_logger{"CAN", "CAN"};
-
   static inline void Reset() {
     CAN->MCR |= CAN_MCR_RESET;
     while (CAN->MCR & CAN_MCR_RESET)

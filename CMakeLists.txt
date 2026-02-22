@@ -1,32 +1,49 @@
-add_subdirectory(polyfills)
+cmake_minimum_required(VERSION 3.25)
+cmake_policy(VERSION 3.25)
 
-# *******************
-# F3-HAL Library
-# *******************
-find_package(CMSIS5DeviceF3 REQUIRED)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(ROBO_TOOLCHAIN_FILE ClangArmToolchain)
 
-if(${EMULATION_ENABLED})
-    add_library(f3-hal OBJECT startup/dummy.c)
-else()
-    add_library(f3-hal OBJECT startup/startup_stm32f303x8.s)
-endif()
+project(f3-baremetal)
+enable_language(C CXX ASM)
 
-target_include_directories(f3-hal PUBLIC include)
-target_link_libraries(f3-hal PUBLIC CMSIS5::Device::F3 syoch-robotics-common)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
 
+# Cortex M4
+add_compile_options(-mfloat-abi=softfp -mfpu=fpv4-sp-d16 -mthumb -mcpu=cortex-m4)
+add_link_options(-mfloat-abi=softfp -mfpu=fpv4-sp-d16 -mthumb -mcpu=cortex-m4)
 
-# *******************
-# F3-Baremetal Library
-# *******************
-add_library(f3-baremetal-libs STATIC source/ram_vector.cpp)
-target_link_libraries(f3-baremetal-libs PUBLIC f3-hal STM32HALF303x8)
+# Debug
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -gfull -fstandalone-debug -gdwarf-5 -gz")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gfull -fstandalone-debug -gdwarf-5 -gz")
 
-if(${EMULATION_ENABLED})
-    target_compile_definitions(f3-baremetal-libs PRIVATE
-        -D__EMULATION__
-    )
-else()
-    target_sources(f3-baremetal-libs PRIVATE
-        source/startup/startup.cpp
-    )
-endif()
+# Size reduction
+add_compile_options(-fno-rtti -fno-exceptions)
+add_compile_options(-Os -ffunction-sections -fdata-sections)
+add_link_options(-Wl,--gc-sections)
+
+add_subdirectory(polyfill-srobo1-random)
+add_subdirectory(f3-baremetal)
+add_subdirectory(CANMonitor)
+
+# Install export
+install(EXPORT F3BaremetalTargets
+  FILE F3BaremetalTargets.cmake
+  NAMESPACE F3Baremetal::
+  DESTINATION lib/cmake/F3Baremetal
+)
+
+# Create config file
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/F3Baremetal.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/F3Baremetal.cmake
+  INSTALL_DESTINATION lib/cmake/F3Baremetal
+)
+
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/F3Baremetal.cmake
+  DESTINATION lib/cmake/F3Baremetal
+)

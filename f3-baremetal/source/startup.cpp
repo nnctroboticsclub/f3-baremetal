@@ -1,5 +1,3 @@
-#include <stm32f3xx_hal.h>
-
 #include <f3/peripherals/rcc.hpp>
 #include <f3/ram_vector.hpp>
 
@@ -11,9 +9,12 @@ extern "C" uint32_t _sidata, _sdata, _edata;
 extern "C" uint32_t _sbss, _ebss;
 extern "C" char _estack;
 
-extern "C" int main();
+int main();
 extern "C" void __libc_init_array();
 extern "C" void Reset_Handler();
+
+__attribute__((weak)) void HAL_Init() {}
+__attribute__((weak)) void HAL_IncTick() {}
 
 extern "C"
     __attribute__((weak)) uint32_t SystemCoreClock;  // for HAL compatibility
@@ -94,7 +95,13 @@ inline static void StartBootloader() {
 
   auto* vec = reinterpret_cast<BL_VecT*>(kSystemMemory);
 
-  __set_MSP(vec->msp);
+  // set msp
+  asm volatile(
+      "mov r0, %0\n"
+      "msr msp, r0\n"
+      :
+      : "r"(vec->msp)
+      : "r0");
   vec->reset_handler();
 
   __ASM volatile("bkpt 0");  // Should never reach here
