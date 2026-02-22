@@ -38,12 +38,12 @@ install(EXPORT F3BaremetalTargets
 # Create config file
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/F3Baremetal.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/F3Baremetal.cmake
+  ${CMAKE_CURRENT_SOURCE_DIR}/F3BaremetalConfig.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/F3BaremetalConfig.cmake
   INSTALL_DESTINATION lib/cmake/F3Baremetal
 )
 
 install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/F3Baremetal.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/F3BaremetalConfig.cmake
   DESTINATION lib/cmake/F3Baremetal
 )
