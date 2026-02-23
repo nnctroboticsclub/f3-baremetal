@@ -14,16 +14,16 @@ target_link_libraries(f3-baremetal PUBLIC
 )
 target_include_directories(f3-baremetal PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include/f3-baremetal>
+    $<INSTALL_INTERFACE:include/f3-baremetal/f3-baremetal>
 )
 
 install(TARGETS f3-baremetal
     EXPORT F3BaremetalTargets
-    INCLUDES DESTINATION include
+    INCLUDES DESTINATION include/f3-baremetal/f3-baremetal
 )
 
 install(DIRECTORY include/
-    DESTINATION include/f3-baremetal
+    DESTINATION include/f3-baremetal/f3-baremetal
     FILES_MATCHING
         PATTERN "*.h"
         PATTERN "*.hpp"

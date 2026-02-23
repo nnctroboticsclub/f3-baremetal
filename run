@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-rm -rf build
-cmake -S . -B build -G Ninja
-cmake --build build
-cmake --install build --prefix build/install
+[ -d build ] && rm -rf build
+
+# cmake -S . -B build -G Ninja
+# cmake --build build
+# cmake --install build --prefix build/install
 
 # FLASH_ARGS="--serial 0670FF373146363143202623" ninja -C build upload_CANMonitor
 
