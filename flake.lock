@@ -102,6 +102,43 @@
         "type": "github"
       }
     },
+    "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1767039857,
+        "narHash": "sha256-vNpUSpF5Nuw8xvDLj2KCwwksIbjua2LZCqhV1LNRDns=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "5edf11c44bc78a0d334f6334cdaf7d60d732daab",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "roboenv",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1771851181,
+        "narHash": "sha256-gFgE6mGUftwseV3DUENMb0k0EiHd739lZexPo5O/sdQ=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "9a4b494b1aa1b93d8edf167f46dc8e0c0011280c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
     "mbed-ce": {
       "flake": false,
       "locked": {
@@ -142,11 +179,11 @@
         "roboenv": "roboenv"
       },
       "locked": {
-        "lastModified": 1771744339,
-        "narHash": "sha256-6hxiFKiViJCNaFZAtiQbK5oBjhrBur4UTqh2rjW0UWA=",
+        "lastModified": 1771744618,
+        "narHash": "sha256-tAv1uAPV/xy3qtzp0JKgC+UQakwFQIBSxwdBR9o1emo=",
         "ref": "refs/heads/main",
-        "rev": "6499abc197d55156c57a0f554b57d07af80f8d7d",
-        "revCount": 33,
+        "rev": "87b50a92fd0491c5e752e7f8fd3ab4d1d984c921",
+        "revCount": 34,
         "type": "git",
         "url": "ssh://git@github.com/nnctroboticsclub/nano.git"
       },
@@ -155,13 +192,33 @@
         "url": "ssh://git@github.com/nnctroboticsclub/nano.git"
       }
     },
+    "nixos-wsl": {
+      "inputs": {
+        "flake-compat": "flake-compat",
+        "nixpkgs": "nixpkgs_3"
+      },
+      "locked": {
+        "lastModified": 1771563879,
+        "narHash": "sha256-vA5hocvdGhr+jfBN7A7ogeZqIz2qx01EixXwdVsQcnE=",
+        "owner": "nix-community",
+        "repo": "NixOS-WSL",
+        "rev": "379d20c55f552e91fb9f3f0382e4a97d3f452943",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "ref": "main",
+        "repo": "NixOS-WSL",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1771116921,
-        "narHash": "sha256-CID/eq9RDzCECT6acXMb9Nu1I/kaYS00gvQxwECYbv8=",
+        "lastModified": 1771714954,
+        "narHash": "sha256-nhZJPnBavtu40/L2aqpljrfUNb2rxmWTmSjK2c9UKds=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "5225070d41b4be8ed48a2ba1bf823b1d57bb2677",
+        "rev": "afbbf774e2087c3d734266c22f96fca2e78d3620",
         "type": "github"
       },
       "original": {
@@ -189,27 +246,27 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1771714954,
-        "narHash": "sha256-nhZJPnBavtu40/L2aqpljrfUNb2rxmWTmSjK2c9UKds=",
-        "owner": "nixos",
+        "lastModified": 1770019141,
+        "narHash": "sha256-VKS4ZLNx4PNrABoB0L8KUpc1fE7CLpQXQs985tGfaCU=",
+        "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "afbbf774e2087c3d734266c22f96fca2e78d3620",
+        "rev": "cb369ef2efd432b3cdf8622b0ffc0a97a02f3137",
         "type": "github"
       },
       "original": {
-        "owner": "nixos",
-        "ref": "release-25.11",
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1771116921,
-        "narHash": "sha256-CID/eq9RDzCECT6acXMb9Nu1I/kaYS00gvQxwECYbv8=",
+        "lastModified": 1771714954,
+        "narHash": "sha256-nhZJPnBavtu40/L2aqpljrfUNb2rxmWTmSjK2c9UKds=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "5225070d41b4be8ed48a2ba1bf823b1d57bb2677",
+        "rev": "afbbf774e2087c3d734266c22f96fca2e78d3620",
         "type": "github"
       },
       "original": {
@@ -231,31 +288,6 @@
         "stm32f4xx-hal-driver": "stm32f4xx-hal-driver"
       },
       "locked": {
-        "lastModified": 1771142823,
-        "narHash": "sha256-uphZraaZeSD/eRGw9CKS1LeRWbYL8DxxoET6JqRVj6E=",
-        "ref": "refs/heads/main",
-        "rev": "13691eaebfaaf69f26bcd19eeea12b896914d082",
-        "revCount": 60,
-        "type": "git",
-        "url": "ssh://git@github.com/nnctroboticsclub/roboenv-nix.git"
-      },
-      "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/nnctroboticsclub/roboenv-nix.git"
-      }
-    },
-    "roboenv_2": {
-      "inputs": {
-        "cmsis-device-f3": "cmsis-device-f3_2",
-        "cmsis-device-f4": "cmsis-device-f4_2",
-        "cmsis5": "cmsis5_2",
-        "mbed-ce": "mbed-ce_2",
-        "nixpkgs": "nixpkgs_4",
-        "rust-overlay": "rust-overlay_2",
-        "stm32f3xx-hal-driver": "stm32f3xx-hal-driver_2",
-        "stm32f4xx-hal-driver": "stm32f4xx-hal-driver_2"
-      },
-      "locked": {
         "lastModified": 1771744362,
         "narHash": "sha256-af9SdvjhWxog6y49nS9w34wjl0GsbYlllNiR4sPcIiE=",
         "ref": "refs/heads/main",
@@ -269,10 +301,36 @@
         "url": "ssh://git@github.com/nnctroboticsclub/roboenv-nix.git"
       }
     },
+    "roboenv_2": {
+      "inputs": {
+        "cmsis-device-f3": "cmsis-device-f3_2",
+        "cmsis-device-f4": "cmsis-device-f4_2",
+        "cmsis5": "cmsis5_2",
+        "home-manager": "home-manager",
+        "mbed-ce": "mbed-ce_2",
+        "nixos-wsl": "nixos-wsl",
+        "nixpkgs": "nixpkgs_4",
+        "rust-overlay": "rust-overlay_2",
+        "stm32f3xx-hal-driver": "stm32f3xx-hal-driver_2",
+        "stm32f4xx-hal-driver": "stm32f4xx-hal-driver_2"
+      },
+      "locked": {
+        "lastModified": 1771922042,
+        "narHash": "sha256-FaOuW/xW+Hz/usfXBdT/pnpCGc6/bjjRDENPfSXzW2U=",
+        "ref": "refs/heads/main",
+        "rev": "d04769e48fa053c55a815963c5b1d4b212cd5591",
+        "revCount": 79,
+        "type": "git",
+        "url": "ssh://git@github.com/nnctroboticsclub/roboenv-nix.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/nnctroboticsclub/roboenv-nix.git"
+      }
+    },
     "root": {
       "inputs": {
         "nano": "nano",
-        "nixpkgs": "nixpkgs_3",
         "roboenv": "roboenv_2"
       }
     },
@@ -306,11 +364,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1771125043,
-        "narHash": "sha256-ldf/s49n6rOAxl7pYLJGGS1N/assoHkCOWdEdLyNZkc=",
+        "lastModified": 1771729765,
+        "narHash": "sha256-HNsDSR5bhLSrIpi9bTb2uTK1qnPo1xFSBxs6YmFyprk=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "4912f951a26dc8142b176be2c2ad834319dc06e8",
+        "rev": "be926cb1a76e8450ab2b92121b2e88d09fa4d41c",
         "type": "github"
       },
       "original": {
