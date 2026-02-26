@@ -217,11 +217,11 @@
         "roboenv": "roboenv"
       },
       "locked": {
-        "lastModified": 1772080953,
-        "narHash": "sha256-JAR16woI3gVNqe9QIMYC07u5Rl+cZctTE5cf2LSaeYM=",
+        "lastModified": 1772081207,
+        "narHash": "sha256-tWVpYxvUkbe85SiK2UD/+yI/k34DWOWJ+RpuToDPb4E=",
         "ref": "refs/heads/main",
-        "rev": "9ff76be6cf4fd315999fe4ebf0a995d56590ac55",
-        "revCount": 38,
+        "rev": "0d93a03c837cbd4912fd32468444cad4d3c45732",
+        "revCount": 39,
         "type": "git",
         "url": "ssh://git@github.com/nnctroboticsclub/nano.git"
       },
@@ -364,11 +364,11 @@
         "stm32f4xx-hal-driver": "stm32f4xx-hal-driver"
       },
       "locked": {
-        "lastModified": 1772078956,
-        "narHash": "sha256-88B0okh0f6YPcPnmv5nDlgxKKPrZfprGIeMvmUca80M=",
+        "lastModified": 1772080967,
+        "narHash": "sha256-LE1Xr0ZxZo0Rgy016SyUukpdQUOJbswc/LqWzg/VqQE=",
         "ref": "refs/heads/main",
-        "rev": "dc9411847ac52a51df795d6a1b6c1b30075a0494",
-        "revCount": 80,
+        "rev": "0c9ab1bf0874fb3040280324ea362bb901d73da6",
+        "revCount": 81,
         "type": "git",
         "url": "ssh://git@github.com/nnctroboticsclub/roboenv-nix.git"
       },
@@ -391,11 +391,11 @@
         "stm32f4xx-hal-driver": "stm32f4xx-hal-driver_2"
       },
       "locked": {
-        "lastModified": 1772080967,
-        "narHash": "sha256-LE1Xr0ZxZo0Rgy016SyUukpdQUOJbswc/LqWzg/VqQE=",
+        "lastModified": 1772081202,
+        "narHash": "sha256-ZWclcn35lqkAIP7nq+VjLnZN+QjfENXYyeZSpcDGo90=",
         "ref": "refs/heads/main",
-        "rev": "0c9ab1bf0874fb3040280324ea362bb901d73da6",
-        "revCount": 81,
+        "rev": "6b47fc3f970d8621be9e30ec68087dab68b1868e",
+        "revCount": 82,
         "type": "git",
         "url": "ssh://git@github.com/nnctroboticsclub/roboenv-nix.git"
       },
