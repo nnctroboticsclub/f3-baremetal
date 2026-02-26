@@ -1,6 +1,6 @@
 {
-  inputs.roboenv.url = "git+ssh://git@github.com/nnctroboticsclub/roboenv-nix.git";
-  inputs.nano.url = "git+ssh://git@github.com/nnctroboticsclub/nano.git";
+  inputs.roboenv.url = "github:nnctroboticsclub/roboenv-nix";
+  inputs.nano.url = "github:nnctroboticsclub/nano";
 
   outputs =
     {
