@@ -1,10 +1,17 @@
 {
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/release-25.11";
+
   inputs.roboenv.url = "github:nnctroboticsclub/roboenv-nix";
+  inputs.roboenv.inputs.nixpkgs.follows = "nixpkgs";
+
   inputs.nano.url = "github:nnctroboticsclub/nano";
+  inputs.nano.inputs.roboenv.follows = "roboenv";
+  inputs.nano.inputs.nixpkgs.follows = "nixpkgs";
 
   outputs =
     {
       self,
+      nixpkgs,
       roboenv,
       nano,
     }:
