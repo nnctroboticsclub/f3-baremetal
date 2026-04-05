@@ -16,3 +16,5 @@ jobs:
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
       - name: Build f3-baremetal library
         run: nix build .
+      - name: Build CANMonitor library
+        run: nix build .#f3-can-monitor

@@ -20,17 +20,32 @@
       rpkgs = roboenv.legacyPackages.${system};
     in
     {
-      packages.x86_64-linux.default = rpkgs.rlib.buildCMakeProject {
-        pname = "f3-baremetal";
-        version = "v0.2.0";
-        src = ./.;
+      packages.${system} = rec {
+        f3-baremetal = rpkgs.rlib.buildCMakeProject {
+          pname = "f3-baremetal";
+          version = "v1.0.0";
+          src = ./.;
 
-        cmakeBuildInputs = [
-          rpkgs.cmsis5-device-f3
-          rpkgs.clang-arm-toolchain
-          rpkgs.roboenv-loader
-          nano.packages.${system}.default
-        ];
+          cmakeBuildInputs = [
+            rpkgs.cmsis5-device-f3
+            rpkgs.clang-arm-toolchain
+            rpkgs.roboenv-loader
+            nano.packages.${system}.default
+          ];
+        };
+        default = f3-baremetal;
+        f3-can-monitor = rpkgs.rlib.buildCMakeProject {
+          pname = "f3-can-monitor";
+          version = "v1.0.0";
+          src = ./CANMonitor;
+
+          cmakeBuildInputs = [
+            rpkgs.clang-arm-toolchain
+            rpkgs.roboenv-loader
+            nano.packages.${system}.default
+            f3-baremetal
+          ];
+        };
       };
     };
 }

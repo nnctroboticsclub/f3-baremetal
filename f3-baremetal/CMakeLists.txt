@@ -1,4 +1,5 @@
 find_package(CMSIS5DeviceF3 REQUIRED)
+find_package(Nano REQUIRED)
 
 add_library(f3-baremetal STATIC
     source/ram_vector.cpp
@@ -11,10 +12,14 @@ target_compile_definitions(f3-baremetal PUBLIC
 )
 target_link_libraries(f3-baremetal PUBLIC
     CMSIS5::Device::F3
+    Nano::Nano
 )
 target_include_directories(f3-baremetal PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include/f3-baremetal/f3-baremetal>
+)
+target_compile_features(f3-baremetal PUBLIC
+    cxx_std_20
 )
 
 install(TARGETS f3-baremetal

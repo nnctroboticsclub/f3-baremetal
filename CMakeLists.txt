@@ -4,7 +4,7 @@ cmake_policy(VERSION 3.25)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(ROBO_TOOLCHAIN_FILE ClangArmToolchain)
 
-project(f3-baremetal)
+project(f3-baremetal 1.0.0)
 enable_language(C CXX ASM)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -26,7 +26,6 @@ add_link_options(-Wl,--gc-sections)
 
 add_subdirectory(polyfill-srobo1-random)
 add_subdirectory(f3-baremetal)
-add_subdirectory(CANMonitor)
 
 # Install export
 install(EXPORT F3BaremetalTargets

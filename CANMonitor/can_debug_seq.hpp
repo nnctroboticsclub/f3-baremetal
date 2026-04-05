@@ -2,7 +2,6 @@
 #include "f3/peripherals/can.hpp"
 
 #include "can.hpp"
-#include "console.hpp"
 #include "event_log.hpp"
 #include "tick_timer.hpp"
 #include "utils.hpp"
