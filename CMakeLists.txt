@@ -4,7 +4,7 @@ cmake_policy(VERSION 3.25)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(ROBO_TOOLCHAIN_FILE ClangArmToolchain)
 
-project(f3-baremetal 1.0.0)
+project(f3-baremetal VERSION 1.0.0)
 enable_language(C CXX ASM)
 
 set(CMAKE_CXX_STANDARD 20)
