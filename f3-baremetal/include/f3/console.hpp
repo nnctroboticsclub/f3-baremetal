@@ -4,7 +4,7 @@
 #include <f3/peripherals/rcc.hpp>
 #include <f3/peripherals/usart.hpp>
 
-#include <Nano/no_mutex_lifo.hpp>
+#include <Nano/queue.hpp>
 
 namespace stm32f3::details::Console {
 template <typename T>
@@ -37,7 +37,7 @@ struct Handler {
   static void HandleRx(char received_char) { rx_buffer.Push(received_char); }
 
   // NOLINTNEXTLINE
-  static inline Nano::collection::NoMutexLIFO<char, kRxBufSize> rx_buffer{};
+  static inline Nano::collection::Queue<char, kRxBufSize> rx_buffer{};
 };
 
 template <>
