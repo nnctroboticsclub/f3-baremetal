@@ -1,8 +1,15 @@
 cmake_minimum_required(VERSION 3.25)
 cmake_policy(VERSION 3.25)
 
+# if $env{ROBOPJ_TOOLCHAIN} is not set, use ClangArmToolchain
+# if set, use the toolchain specified by $env{ROBOPJ_TOOLCHAIN}
+set(ROBO_TOOLCHAIN_FILE $ENV{ROBOPJ_TOOLCHAIN})
+if (NOT ROBO_TOOLCHAIN_FILE)
+  set(ROBO_TOOLCHAIN_FILE ClangArmToolchain)
+endif()
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(ROBO_TOOLCHAIN_FILE ClangArmToolchain)
+set(ROBO_TOOLCHAIN_FILE ${ROBO_TOOLCHAIN_FILE})
 
 project(f3-baremetal VERSION 1.0.0)
 enable_language(C CXX ASM)
