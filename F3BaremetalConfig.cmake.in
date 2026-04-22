@@ -1,5 +1,6 @@
 @PACKAGE_INIT@
 
+find_package(CMSIS5 CONFIG)
 find_package(CMSIS5DeviceF3 REQUIRED)
 find_package(Nano REQUIRED)
 

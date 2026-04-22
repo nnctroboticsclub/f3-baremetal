@@ -26,6 +26,8 @@ add_link_options(-Wl,--gc-sections)
 
 add_subdirectory(polyfill-srobo1-random)
 add_subdirectory(f3-baremetal)
+add_subdirectory(stub-bootloader)
+add_subdirectory(stub-bootloader-api)
 
 # Install export
 install(EXPORT F3BaremetalTargets
