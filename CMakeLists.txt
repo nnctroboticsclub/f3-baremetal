@@ -75,3 +75,16 @@ install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/F3BaremetalConfig.cmake
   DESTINATION lib/cmake/F3Baremetal
 )
+
+# Test PJ (CANMonitor)
+include(TargetTransformer)
+
+find_package(Nano REQUIRED)
+add_executable(CANMonitor CANMonitor/main.cpp)
+target_link_libraries(CANMonitor PUBLIC F3Baremetal::f3-baremetal Nano::Nano)
+target_compile_options(CANMonitor PUBLIC -fno-threadsafe-statics)
+target_compile_options(CANMonitor PUBLIC -fuse-cxa-atexit)
+target_link_options(CANMonitor PUBLIC -specs=nano.specs -specs=nosys.specs)
+target_link_options(CANMonitor PUBLIC -Wl,-T,${CMAKE_CURRENT_SOURCE_DIR}/CANMonitor/CANMonitor.ld)
+
+embedded_transform_target(CANMonitor)
