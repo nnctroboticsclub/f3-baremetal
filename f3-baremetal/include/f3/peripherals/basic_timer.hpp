@@ -114,7 +114,7 @@ class BasicTimer {
 
     RCC->APB1ENR |= kClockEnFlag;
 
-    Instance()->SR = TIM_CR1_ARPE | TIM_CR1_URS;
+    Instance()->CR1 = TIM_CR1_ARPE | TIM_CR1_URS;
     Instance()->DIER |= TIM_DIER_UIE;
     Instance()->PSC = prescaler - 1;
     Instance()->ARR = auto_reload_value - 1;
