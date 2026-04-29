@@ -1,11 +1,21 @@
 cmake_minimum_required(VERSION 3.25)
 cmake_policy(VERSION 3.25)
 
-# if $env{ROBOPJ_TOOLCHAIN} is not set, use ClangArmToolchain
-# if set, use the toolchain specified by $env{ROBOPJ_TOOLCHAIN}
 set(ROBO_TOOLCHAIN_FILE $ENV{ROBOPJ_TOOLCHAIN})
 if (NOT ROBO_TOOLCHAIN_FILE)
   set(ROBO_TOOLCHAIN_FILE ClangArmToolchain)
+endif()
+
+if ($ENV{F3BARE_USE_STUB_BOOTLOADER} MATCHES "1|ON|TRUE|YES")
+    set(USE_STUB_BOOTLOADER TRUE)
+else()
+    set(USE_STUB_BOOTLOADER FALSE)
+endif()
+
+if ($ENV{F3BARE_EMULATION} MATCHES "1|ON|TRUE|YES")
+    set(F3BARE_EMULATION TRUE)
+else()
+    set(F3BARE_EMULATION FALSE)
 endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -14,13 +24,20 @@ set(ROBO_TOOLCHAIN_FILE ${ROBO_TOOLCHAIN_FILE})
 project(f3-baremetal VERSION 1.0.0)
 enable_language(C CXX ASM)
 
+message(STATUS "Using toolchain file: ${ROBO_TOOLCHAIN_FILE}")
+message(STATUS "F3BARE_USE_STUB_BOOTLOADER: ${USE_STUB_BOOTLOADER}")
+message(STATUS "F3BARE_EMULATION: ${F3BARE_EMULATION}")
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 
 # Cortex M4
-add_compile_options(-mfloat-abi=softfp -mfpu=fpv4-sp-d16 -mthumb -mcpu=cortex-m4)
-add_link_options(-mfloat-abi=softfp -mfpu=fpv4-sp-d16 -mthumb -mcpu=cortex-m4)
+# if toolchain name contains "arm" add the options (case insensitive)
+if (ROBO_TOOLCHAIN_FILE MATCHES "ClangArmToolchain")
+  add_compile_options(-mfloat-abi=softfp -mfpu=fpv4-sp-d16 -mthumb -mcpu=cortex-m4)
+  add_link_options(-mfloat-abi=softfp -mfpu=fpv4-sp-d16 -mthumb -mcpu=cortex-m4)
+endif()
 
 # Debug
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -gfull -fstandalone-debug -gdwarf-5 -gz")
@@ -33,8 +50,11 @@ add_link_options(-Wl,--gc-sections)
 
 add_subdirectory(polyfill-srobo1-random)
 add_subdirectory(f3-baremetal)
-add_subdirectory(stub-bootloader)
-add_subdirectory(stub-bootloader-api)
+
+if (USE_STUB_BOOTLOADER)
+  add_subdirectory(stub-bootloader)
+  add_subdirectory(stub-bootloader-api)
+endif()
 
 # Install export
 install(EXPORT F3BaremetalTargets

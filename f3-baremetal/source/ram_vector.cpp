@@ -17,7 +17,7 @@ extern "C" void InitVector() {
     ram_vector[i] = DefaultHandler;
   }
 
-#ifdef __EMULATION__
+#ifdef F3BARE_EMULATION
   *(uintptr_t*)0xABCD0000 = (uintptr_t)ram_vector.data();
 #else
   SCB->VTOR = (uint32_t)ram_vector.data();

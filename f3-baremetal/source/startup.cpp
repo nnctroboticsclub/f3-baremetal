@@ -30,30 +30,6 @@ std::array<stm32f3::ram_vector::HandlerType, 0x200 / 4> flash_vector
 }  // namespace stm32
 
 namespace stm32::startup {
-static char kBootloaderFlag[16] __attribute__((section(".noinit")));
-constexpr char kBootloaderFlagMagic[] = "BOOTLOADER_FLAG";
-
-bool ShouldStartBootloader() {
-  for (size_t i = 0; i < sizeof(kBootloaderFlagMagic); ++i) {
-    if (kBootloaderFlag[i] != kBootloaderFlagMagic[i]) {
-      return false;
-    }
-  }
-  return true;
-}
-
-void SetBootloaderFlag() {
-  for (size_t i = 0; i < sizeof(kBootloaderFlagMagic); ++i) {
-    kBootloaderFlag[i] = kBootloaderFlagMagic[i];
-  }
-}
-
-void ClearBootloaderFlag() {
-  for (char& i : kBootloaderFlag) {
-    i = 0;
-  }
-}
-
 static void StartApp() {
   // Copy the .data section to SRAM
   uint32_t const* pSrc = &_sidata;
@@ -85,10 +61,37 @@ static void StartApp() {
   main();
 }
 
+#ifdef F3BARE_USE_STUB_BOOTLOADER
+
 struct BL_VecT {
   uint32_t msp;
   void (*reset_handler)();
 };
+
+static char kBootloaderFlag[16] __attribute__((section(".noinit")));
+
+constexpr char kBootloaderFlagMagic[] = "BOOTLOADER_FLAG";
+
+bool ShouldStartBootloader() {
+  for (size_t i = 0; i < sizeof(kBootloaderFlagMagic); ++i) {
+    if (kBootloaderFlag[i] != kBootloaderFlagMagic[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void SetBootloaderFlag() {
+  for (size_t i = 0; i < sizeof(kBootloaderFlagMagic); ++i) {
+    kBootloaderFlag[i] = kBootloaderFlagMagic[i];
+  }
+}
+
+void ClearBootloaderFlag() {
+  for (char& i : kBootloaderFlag) {
+    i = 0;
+  }
+}
 
 inline static void StartBootloader() {
   constexpr uint32_t kSystemMemory = 0x1FFFd800;
@@ -106,14 +109,19 @@ inline static void StartBootloader() {
 
   __ASM volatile("bkpt 0");  // Should never reach here
 }
+#endif
 
 extern "C" [[noreturn]] void StartUp() {
+#ifdef F3BARE_USE_STUB_BOOTLOADER
   if (ShouldStartBootloader()) {
     ClearBootloaderFlag();
     StartBootloader();
   } else {
     StartApp();
   }
+#else
+  StartApp();
+#endif
 
   while (true)
     ;

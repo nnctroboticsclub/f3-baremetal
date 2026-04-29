@@ -26,6 +26,9 @@
           version = "v1.0.0";
           src = ./.;
 
+          F3BARE_USE_STUB_BOOTLOADER = "1";
+          F3BARE_EMULATION = "0";
+
           cmakeBuildInputs = [
             rpkgs.cmsis5-device-f3
             rpkgs.clang-arm-toolchain

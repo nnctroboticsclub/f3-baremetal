@@ -1,7 +1,5 @@
 #pragma once
 
-#include <stm32f303x8.h>
-
 #include <array>
 #include <cstdint>
 #include <cstdio>
