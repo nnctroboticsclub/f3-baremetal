@@ -380,7 +380,7 @@ class BaremetalCAN {
 
     auto dlc = (fifo.RDTR & CAN_RDT0R_DLC_Msk) >> CAN_RDT0R_DLC_Pos;
 
-    CANMessage msg = {.id = id, .length = dlc};
+    CANMessage msg = {.id = id, .length = (uint32_t)dlc};
 
     msg.data[0] = (fifo.RDLR & 0x000000FF) >> 0;
     msg.data[1] = (fifo.RDLR & 0x0000FF00) >> 8;
