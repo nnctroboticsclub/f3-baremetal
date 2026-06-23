@@ -1,33 +1,86 @@
-#include "can.hpp"
-#include "can_debug.hpp"
-#include "can_debug_seq.hpp"
-#include "event_log.hpp"
-#include "rcc.hpp"
+#include <cstddef>
+#include <cstdio>
 
-#include <f3/console.hpp>
+#include <SEGGER_RTT.h>
+#include <stm32f303x8.h>
 
-using App = CanDebug;
-// using App = CANMonitor::CANDebug_Seq;
+#include <f3/peripherals/pin.hpp>
+#include <f3/peripherals/rcc.hpp>
 
-struct HardwareConfig {
-  using RCCConfig = CANMonitor::BaremetalRCC;
+class SeggerRTTConsole {
+ public:
+  static size_t Write(const char* ptr, int len) {
+    return SEGGER_RTT_Write(0, ptr, len);
+  }
 
-  using ConsoleTx = stm32f3::GPIO<0, 2>;
-  using ConsoleRx = stm32f3::GPIO<0, 15>;
-  static constexpr uint32_t kConsoleBaudrate = 921600;
-  static constexpr uint32_t kConsoleUARTAltFn = 7;
-  static constexpr uint32_t kConsoleUARTId = 2;
-  static constexpr size_t kConsoleRxBufSize = 0;
+  static size_t Read(char* ptr, size_t len) {
+    return SEGGER_RTT_Read(0, ptr, len);
+  }
 };
 
+void InitRCCImpl();
+size_t WriteImpl(int file, const char* ptr, int len);
+size_t ReadImpl(int file, char* ptr, size_t len);
+
+extern "C" void InitRCC() {
+  InitRCCImpl();
+}
+extern "C" size_t _write(int file, const char* ptr, int len) {
+  return WriteImpl(file, ptr, len);
+}
+extern "C" size_t _read(int file, char* ptr, size_t len) {
+  return ReadImpl(file, ptr, len);
+}
+
+using namespace stm32f3::rcc;
+
+template <typename Dummy>
+class System {
+  using AppRCC =
+      RCCConfig<ClockOrigin{.HSI = 8000000, .HSE = 8000000},
+                PLLConfig<PLLSource_HSI_D2, 10>,
+                SystemClockConfig<SystemClockSource::kPLL>,
+                BusClockConfig<AHBPrescaler::kDiv1, APB1Prescaler::kDiv1,
+                               APB2Prescaler::kDiv1>>;
+  using Console = SeggerRTTConsole;
+
+  static_assert(AppRCC::GetAPB1Clock() == 40e6);
+  static_assert(AppRCC::GetAPB2Clock() == 40e6);
+  static_assert(AppRCC::GetAHBClock() == 40e6);
+
+ public:
+  friend void InitRCCImpl() { AppRCC::ApplyConfig(); }
+  friend size_t WriteImpl(int file, const char* ptr, int len) {
+    (void)file;
+    return Console::Write(ptr, len);
+  }
+  friend size_t ReadImpl(int file, char* ptr, size_t len) {
+    (void)file;
+    return Console::Read(ptr, len);
+  }
+};
+
+template class System<void>;
+
 int main() {
-  stm32::InitRCC();
-  stm32f3::Console<HardwareConfig>::Init();
-  CANMonitor::InitCAN();
+  using stm32f3::NewPin;
+  using stm32f3::PinPullMode;
+  using stm32f3::PinSpeed;
 
-  CANMonitor::kEventLog.Log("Is RCC Initialized?: %d",
-                            CANMonitor::rcc_initialized);
+  SEGGER_RTT_Init();
 
-  App app;
-  app.Main();
+  SCnSCB->ACTLR |= SCnSCB_ACTLR_DISDEFWBUF_Msk;  // Disable D-Cache
+  SCB->CPACR |= 0x00F00000;                      // Enable FPU
+
+  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+  DWT->CYCCNT = 0;
+  DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+
+  auto pin = NewPin<1, 3>()
+                 .Init<PinPullMode::kNoPull, PinSpeed::kSpeed0>()
+                 .InitAsOutput<false>();
+  pin.Write(true);
+  while (true) {}
+
+  return 0;
 }
