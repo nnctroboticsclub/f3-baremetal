@@ -45,6 +45,7 @@
           cmakeBuildInputs = [
             rpkgs.clang-arm-toolchain
             rpkgs.roboenv-loader
+            rpkgs.segger-rtt
             nano.packages.${system}.default
             f3-baremetal
           ];

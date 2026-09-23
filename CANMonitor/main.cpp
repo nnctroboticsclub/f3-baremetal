@@ -1,33 +1,31 @@
-#include "can.hpp"
-#include "can_debug.hpp"
-#include "can_debug_seq.hpp"
-#include "event_log.hpp"
-#include "rcc.hpp"
+#include <cstdio>
 
-#include <f3/console.hpp>
+#include <SEGGER_RTT.h>
+#include <stm32f303x8.h>
 
-using App = CanDebug;
-// using App = CANMonitor::CANDebug_Seq;
+#include <f3/peripherals/pin.hpp>
+#include <f3/peripherals/rcc.hpp>
 
-struct HardwareConfig {
-  using RCCConfig = CANMonitor::BaremetalRCC;
+#include "segger-io.hpp"
+#include "sys.hpp"
 
-  using ConsoleTx = stm32f3::GPIO<0, 2>;
-  using ConsoleRx = stm32f3::GPIO<0, 15>;
-  static constexpr uint32_t kConsoleBaudrate = 921600;
-  static constexpr uint32_t kConsoleUARTAltFn = 7;
-  static constexpr uint32_t kConsoleUARTId = 2;
-  static constexpr size_t kConsoleRxBufSize = 0;
-};
+using namespace stm32f3::rcc;
+
+template class System<
+    RCCConfig<ClockOrigin{.HSI = 8000000, .HSE = 8000000},
+              PLLConfig<PLLSource_HSI_D2, 10>,
+              SystemClockConfig<SystemClockSource::kPLL>,
+              BusClockConfig<AHBPrescaler::kDiv1, APB1Prescaler::kDiv1,
+                             APB2Prescaler::kDiv1>>,
+    SeggerRTTConsole>;
 
 int main() {
-  stm32::InitRCC();
-  stm32f3::Console<HardwareConfig>::Init();
-  CANMonitor::InitCAN();
+  SCnSCB->ACTLR |= SCnSCB_ACTLR_DISDEFWBUF_Msk;  // Disable D-Cache
+  SCB->CPACR |= 0x00F00000;                      // Enable FPU
 
-  CANMonitor::kEventLog.Log("Is RCC Initialized?: %d",
-                            CANMonitor::rcc_initialized);
+  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+  DWT->CYCCNT = 0;
+  DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 
-  App app;
-  app.Main();
+  return 0;
 }

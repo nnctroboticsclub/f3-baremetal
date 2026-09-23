@@ -33,14 +33,14 @@ target_include_directories(f3-baremetal PUBLIC
 
 target_compile_features(f3-baremetal PUBLIC cxx_std_20)
 
-install(TARGETS f3-baremetal
-    EXPORT F3BaremetalTargets
-    INCLUDES DESTINATION include/f3-baremetal/f3-baremetal
-)
-
 install(DIRECTORY include/
     DESTINATION include/f3-baremetal/f3-baremetal
     FILES_MATCHING
         PATTERN "*.h"
         PATTERN "*.hpp"
+)
+
+install(TARGETS f3-baremetal
+    EXPORT F3BaremetalTargets
+    INCLUDES DESTINATION include/f3-baremetal/f3-baremetal
 )

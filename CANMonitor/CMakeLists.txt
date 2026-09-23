@@ -28,6 +28,7 @@ include(TargetTransformer)
 
 find_package(Nano REQUIRED)
 find_package(F3Baremetal REQUIRED)
+find_package(SeggerRTT REQUIRED)
 
 add_executable(CANMonitor main.cpp)
 target_link_libraries(CANMonitor PUBLIC F3Baremetal::f3-baremetal Nano::Nano)
@@ -35,6 +36,10 @@ target_compile_options(CANMonitor PUBLIC -fno-threadsafe-statics)
 target_compile_options(CANMonitor PUBLIC -fuse-cxa-atexit)
 target_link_options(CANMonitor PUBLIC -specs=nano.specs -specs=nosys.specs)
 target_link_options(CANMonitor PUBLIC -Wl,-T,${CMAKE_CURRENT_SOURCE_DIR}/CANMonitor.ld)
+
+target_sources(CANMonitor PUBLIC ${SEGGER_RTT_CONFIG_SOURCES} ${SEGGER_RTT_COMMON_SOURCES})
+target_include_directories(CANMonitor PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(CANMonitor PUBLIC ${SeggerRTT_INCLUDE_DIRS})
 
 embedded_transform_target(CANMonitor)
 
